@@ -4,6 +4,7 @@ import type { ChatRequestOptions, Message } from 'ai';
 import cx from 'classnames';
 import { AnimatePresence, motion } from 'framer-motion';
 import { memo, useMemo, useState } from 'react';
+import Image from 'next/image';
 
 import type { Vote } from '@/lib/db/schema';
 
@@ -19,6 +20,7 @@ import { Button } from './ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { MessageEditor } from './message-editor';
 import { DocumentPreview } from './document-preview';
+import { EChartDisplay } from './EChartDisplay';
 
 const PurePreviewMessage = ({
   chatId,
@@ -42,6 +44,18 @@ const PurePreviewMessage = ({
   isReadonly: boolean;
 }) => {
   const [mode, setMode] = useState<'view' | 'edit'>('view');
+
+  const parseMessage = useMemo(() => {
+    try {
+      const cleanContent = message.content.replace(/```json\n?|\n?```/g, '');
+      return JSON.parse(cleanContent);
+    } catch {
+      return null;
+    }
+  }, [message.content]);
+
+  const isChartData = parseMessage && parseMessage.hasOwnProperty('chartData');
+  const isImageData = parseMessage && parseMessage.hasOwnProperty('imageUrl');
 
   return (
     <AnimatePresence>
@@ -100,12 +114,29 @@ const PurePreviewMessage = ({
                 )}
 
                 <div
-                  className={cn('flex flex-col gap-4', {
+                  className={cn('flex flex-col gap-4 w-full', {
                     'bg-primary text-primary-foreground px-3 py-2 rounded-xl':
                       message.role === 'user',
                   })}
                 >
-                  <Markdown>{message.content as string}</Markdown>
+                  {isChartData ? (
+                    <EChartDisplay data={parseMessage.chartData} />
+                  ) : isImageData ? (
+                    <div className="w-full max-w-2xl">
+                      <Image 
+                        src={parseMessage.imageUrl}
+                        alt={parseMessage.imagePrompt || "Generated image"}
+                        width={1024}
+                        height={1024}
+                        className="rounded-lg shadow-lg"
+                      />
+                      <p className="text-sm text-gray-500 mt-2 italic">
+                        Prompt: {parseMessage.imagePrompt}
+                      </p>
+                    </div>
+                  ) : (
+                    <p>{message.content}</p>
+                  )}
                 </div>
               </div>
             )}

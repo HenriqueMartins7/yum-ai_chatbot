@@ -29,6 +29,9 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { SuggestedActions } from './suggested-actions';
 import equal from 'fast-deep-equal';
+import LoadingGif from '@/public/images/XOsX.gif';
+import Image from 'next/image';
+
 
 function PureMultimodalInput({
   chatId,
@@ -195,6 +198,18 @@ function PureMultimodalInput({
 
   return (
     <div className="relative w-full flex flex-col gap-4">
+      {isLoading && (
+        <div className="fixed right-4 bottom-32 md:right-64 md:bottom-32 flex items-center justify-center z-50">
+          <Image
+            src={LoadingGif}
+            alt="Loading..."
+            width={100}
+            height={100}
+            className="opacity-75 md:w-[200px] md:h-[200px]"
+          />
+        </div>
+      )}
+
       {messages.length === 0 &&
         attachments.length === 0 &&
         uploadQueue.length === 0 && (

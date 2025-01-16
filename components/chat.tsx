@@ -4,6 +4,7 @@ import type { Attachment, Message } from 'ai';
 import { useChat } from 'ai/react';
 import { useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
+import Image from 'next/image';
 
 import { ChatHeader } from '@/components/chat-header';
 import type { Vote } from '@/lib/db/schema';
@@ -56,7 +57,15 @@ export function Chat({
   );
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
+  const [showGif, setShowGif] = useState(false);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
+
+  const handleUserSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowGif(true); // Affiche le GIF lors de l'envoi
+    await handleSubmit(e); // Envoie le message
+    setTimeout(() => setShowGif(false), 3000); // Cache le GIF après 3 secondes
+  };
 
   return (
     <>
@@ -79,7 +88,10 @@ export function Chat({
           isBlockVisible={isBlockVisible}
         />
 
-        <form className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
+        <form
+          onSubmit={handleUserSubmit}
+          className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl"
+        >
           {!isReadonly && (
             <MultimodalInput
               chatId={id}
