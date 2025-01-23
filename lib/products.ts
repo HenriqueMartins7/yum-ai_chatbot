@@ -24,7 +24,7 @@ export async function getProducts(
         description: product.description,
         images: product.images,
         price: {
-          id: price.id,
+          id: 1, //priuce.id,
           amount,
           display_amount: amount?.toLocaleString("en-US", {
             style: "currency",
