@@ -45,6 +45,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
+  SidebarProvider
 } from '@/components/ui/sidebar';
 import type { Chat } from '@/lib/db/schema';
 import { fetcher } from '@/lib/utils';
@@ -280,7 +281,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
   };
 
   return (
-    <>
+    <SidebarProvider>
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu>
@@ -412,6 +413,6 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </SidebarProvider>
   );
 }
