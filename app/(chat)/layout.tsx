@@ -30,6 +30,10 @@ export default async function Layout({
 
   return (
     <>
+      <Script
+        src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"
+        strategy="beforeInteractive"
+      />
       <TooltipProvider delayDuration={0}>
         <SiteHeader />
       </TooltipProvider>
@@ -39,10 +43,7 @@ export default async function Layout({
         </TooltipProvider>
         <main className="flex-1">{children}</main>
       </SidebarProvider>
-      <Script
-        src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"
-        strategy="beforeInteractive"
-      />
+      
     </>
   );
 }

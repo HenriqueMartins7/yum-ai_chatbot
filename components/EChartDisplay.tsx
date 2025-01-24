@@ -144,8 +144,6 @@ export function EChartDisplay({ data }: { data: ChartData }) {
           }]
         };
 
-      // ... garder les cas existants (line, bar, pie, scatter, radar, heatmap, treemap) ...
-
       default:
         return {
           ...baseOptions,
@@ -158,6 +156,8 @@ export function EChartDisplay({ data }: { data: ChartData }) {
         };
     }
   }, [data]);
+
+  console.log('Chart options:', options);
 
   return (
     <div className="w-full max-w-[800px] md:max-w-[1000px] lg:max-w-[1200px] h-[400px] bg-white rounded-lg shadow-sm mx-auto">
